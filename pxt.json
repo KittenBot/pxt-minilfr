@@ -1,0 +1,15 @@
+{
+    "name": "minilfr",
+    "version": "0.1.0",
+    "description": "Microbit extension for kittenbot MiniLFR",
+    "license": "MIT",
+    "dependencies": {
+        "core": "*"
+    },
+    "files": [
+        "README.md",
+        "main.ts"
+    ],
+    "public": true,
+    "preferredEditor": "tsprj"
+}
