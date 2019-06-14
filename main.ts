@@ -12,7 +12,10 @@ namespace minilfr {
     let sonarValue: number = 0;
     let batteryValue: number = 0;
     let sensorValue: number[] = [0, 0, 0, 0, 0];
+    let lastSensorUpdate: number;
     let irHandler: EvtStr = null;
+
+    let debugSensor: boolean;
 
 
     export enum SensorEnum {
@@ -100,18 +103,60 @@ namespace minilfr {
         OFF = 0
     }
 
+    function updateSensorOnMatrix(): void {
+        let img = images.createImage(`
+            . . . . .
+            . . . . .
+            . . . . .
+            . . . . .
+            . . . . .
+        `)
+
+        for (let i = 0; i < 5; i++) {
+            let v = Math.floor(sensorValue[i] / 167)
+
+            for (let j = 0; j < 5; j++) {
+                if (v > j) {
+                    img.setPixel(4 - i, 4 - j, true)
+                }
+            }
+        }
+
+        img.showImage(0)
+    }
+
+    function trim(t: string): string {
+        let idx = t.length - 1
+        let ch = t.charCodeAt(idx)
+        while (ch == 0x20 || ch == 0x0d || ch == 0x0a) {
+            idx--;
+            ch = t.charCodeAt(idx)
+        }
+        return t.substr(0, idx + 1);
+    }
+
     serial.onDataReceived('\n', function () {
-        let s = serial.readString().split("\r")[0]
+        let s = trim(serial.readString())
         let tmp = s.split(" ")
 
         if (tmp[0].includes("TRIG")) {
-            if (tmp[1].includes("infra") && irHandler){
+            if (tmp[1].includes("infra") && irHandler) {
                 irHandler(tmp[2])
             }
         } else if (tmp[0].includes("M8")) {
+            // tofixed?
             batteryValue = parseFloat(tmp[1])
         } else if (tmp[0].includes("M7")) {
-            sonarValue = parseInt(tmp[1])
+            sonarValue =parseInt(tmp[1])
+        } else if (tmp[0].includes("M10")) {
+            sensorValue[0] = parseInt(tmp[1])
+            sensorValue[1] = parseInt(tmp[2])
+            sensorValue[2] = parseInt(tmp[3])
+            sensorValue[3] = parseInt(tmp[4])
+            sensorValue[4] = parseInt(tmp[5])
+            if (debugSensor) {
+                updateSensorOnMatrix();
+            }
         }
 
     })
@@ -121,6 +166,8 @@ namespace minilfr {
     export function minilfrInit(): void {
         serial.redirect(SerialPin.P0, SerialPin.P1, 115200)
         serial.writeString("\n\n")
+        serial.setRxBufferSize(64)
+        lastSensorUpdate = input.runningTimeMicros()
     }
 
     //% blockId=minilfr_spotlight block="Spotlight Left|%left Right|%right"
@@ -202,7 +249,10 @@ namespace minilfr {
     //% blockId=minilfr_sensor block="Sensor %sensor Value"
     //% weight=64
     export function SensorRead(sensor: SensorEnum): number {
-        serial.writeLine("M1 " + sensor)
+        if (input.runningTimeMicros() - lastSensorUpdate > 10) {
+            serial.writeLine("M10 " + sensor)
+            lastSensorUpdate = input.runningTimeMicros()
+        }
         return sensorValue[sensor];
     }
 
@@ -223,6 +273,53 @@ namespace minilfr {
     //% weight=60
     export function onInfraGot(handler: (irdata: string) => void): void {
         irHandler = handler;
+    }
+
+    //% blockId=minilfr_golinefollow block="Go linefollow mode"
+    //% weight=59
+    export function goLinefollow(): void {
+        serial.writeLine("M31")
+    }
+
+    //% blockId=minilfr_goObjavoid block="Go object avoid mode"
+    //% weight=58
+    export function goObjavoid(): void {
+        serial.writeLine("M32")
+    }
+
+    //% blockId=minilfr_goIdle block="Go Idle"
+    //% weight=57
+    export function goIdle(): void {
+        serial.writeLine("M33")
+    }
+
+    //% blockId=minilfr_sensorcali block="Sensor Calibrate"
+    //% weight=49
+    //% advanced=true
+    export function calibrateSensor(): void {
+        serial.writeLine("M310")
+    }
+
+    //% blockId=minilfr_getmotodiff block="Get MotorDiff"
+    //% weight=48
+    //% advanced=true
+    export function getMotorDiff(): number {
+        serial.writeLine("M210")
+        return 0;
+    }
+
+    //% blockId=minilfr_setmotodiff block="Set MotorDiff %diff"
+    //% weight=47
+    //% advanced=true
+    export function setMotorDiff(diff: number): void {
+        serial.writeLine("M209 " + diff)
+    }
+
+    //% blockId=minilfr_setsensordbg block="Set Sensordebug %dgb"
+    //% weight=47
+    //% advanced=true
+    export function setSensorDebug(dgb: boolean): void {
+        debugSensor = dgb
     }
 
 }
