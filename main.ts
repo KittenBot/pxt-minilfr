@@ -19,10 +19,15 @@ namespace minilfr {
 
 
     export enum SensorEnum {
+        //% block=T1
         A = 1,
+        //% block=T2
         B = 2,
+        //% block=T3
         C = 3,
+        //% block=T4
         D = 4,
+        //% block=T5
         E = 5
     }
 
@@ -147,7 +152,7 @@ namespace minilfr {
             // tofixed?
             batteryValue = parseFloat(tmp[1])
         } else if (tmp[0].includes("M7")) {
-            sonarValue =parseInt(tmp[1])
+            sonarValue = parseInt(tmp[1])
         } else if (tmp[0].includes("M10")) {
             sensorValue[0] = parseInt(tmp[1])
             sensorValue[1] = parseInt(tmp[2])
@@ -232,7 +237,7 @@ namespace minilfr {
         serial.writeLine("M17 " + notes)
     }
 
-    //% blockId=minilfr_buzzer_localmusic block="Buzzer Music %notes"
+    //% blockId=minilfr_buzzer_localmusic block="Buzzer Music %idx"
     //% weight=68
     export function buzzBuildMusic(idx: LFRMelodies): void {
         serial.writeLine("M23 " + idx)

@@ -1,0 +1,20 @@
+{
+    "target": "microbit",
+    "targetVersion": "1.4.11",
+    "name": "minilfr",
+    "meta": {},
+    "editor": "tsprj",
+    "pubId": "",
+    "pubCurrent": false,
+    "_rev": null,
+    "id": "13b0d880-d697-4acb-432c-e538c7350b89",
+    "recentUse": 1560999932,
+    "modificationTime": 1560999272,
+    "blobId": null,
+    "blobVersion": null,
+    "blobCurrent": false,
+    "isDeleted": false,
+    "path": "pxt-minilfr",
+    "githubCurrent": false,
+    "saveId": null
+}
