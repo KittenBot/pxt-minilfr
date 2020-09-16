@@ -6,6 +6,7 @@ load dependency
 */
 
 //% color="#91a7ff" weight=10 icon="\uf061"
+//% groups='["Car", "Linefollower", "Ultrasonic", "RGB Ring", "Matrix", "Infrared"]'
 namespace minilfr {
     type EvtStr = (data: string) => void;
 
@@ -94,17 +95,22 @@ namespace minilfr {
         //% block=white
         White = 0xFFFFFF,
         //% block=black
-        Black = 0x000000
+        Black = 0x000000       
     }
 
     export enum RGBIDX {
+        //% block=All
         ALL = 0,
+        //% block=Left
         LEFT = 1,
+        //% block=Right
         RIGHT = 2
     }
 
     export enum ONOFF {
+        //% block=ON
         ON = 1,
+        //% block=OFF
         OFF = 0
     }
 
@@ -167,7 +173,7 @@ namespace minilfr {
     })
 
     //% blockId=minilfr_init block="MiniLFR init"
-    //% weight=91
+    //% group="Car" weight=100
     export function minilfrInit(): void {
         serial.redirect(SerialPin.P0, SerialPin.P1, 115200)
         serial.writeString("\n\n")
@@ -175,29 +181,67 @@ namespace minilfr {
         lastSensorUpdate = input.runningTimeMicros()
     }
 
+    //% blockId=minilfr_goIdle block="Go Idle"
+    //% weight=99
+    export function goIdle(): void {
+        serial.writeLine("M33")
+    }
+
     //% blockId=minilfr_spotlight block="Spotlight Left|%left Right|%right"
-    //% weight=91
+    //% group="Car" weight=98
     export function spotLight(left: ONOFF, right: ONOFF): void {
         serial.writeLine("M6 " + left + " " + right)
     }
 
-    //% blockId=minilfr_rgb_brightness block="RGB brightness %brighness"
-    //% weight=90
-    export function rgbBrightness(brighness: number): void {
-        serial.writeLine("M14 " + brighness)
+    //% blockId=minilfr_rgb_brightness block="RGB brightness %brightness"
+    //% brightness.min=0 brightness.max=255
+    //% group="Car" weight=97
+    export function rgbBrightness(brightness: number): void {
+        serial.writeLine("M14 " + brightness)
     }
 
-    //% blockId=minilfr_hover_rgb block="Hover RGB %rgb Color|%color"
-    //% weight=89
-    export function hoverRgb(rgb: RGBIDX, color: NeoPixelColors): void {
+    //% blockId=minilfr_hover_rgb_static block="Hover RGB %idx Color|%color"
+    //% group="Car" weight=96
+    export function hoverRgbStatic(idx: RGBIDX, color: NeoPixelColors): void {
         let red = (color >> 16) & 0xff;
         let green = (color >> 8) & 0xff;
         let blue = (color) & 0xff;
-        serial.writeLine("M13 " + rgb + " " + red + " " + green + " " + blue)
+        serial.writeLine("M13 " + idx + " " + red + " " + green + " " + blue)
+    }
+
+    //% blockId=minilfr_hover_rgb block="Hover RGB %idx|red %r green %g blue %b"
+    //% group="Car" weight=95
+    //% r.min=0 r.max=255
+    //% g.min=0 g.max=255
+    //% b.min=0 b.max=255
+    export function hoverRgb(idx: RGBIDX, r: number, g: number, b: number): void {
+        serial.writeLine("M13 " + idx + " " + r + " " + g + " " + b)
+    }
+
+    //% blockId=minilfr_buzzer block="Buzzer Freq|%freq HZ Duration|%ms ms"
+    //% group="Car" weight=94
+    export function buzz(freq: number, ms: number): void {
+        serial.writeLine("M18 " + freq + " " + ms)
+    }
+
+    /**
+     * Buzzer music
+     * @param notes Music notes; eg: g5:1
+    */
+    //% blockId=minilfr_buzzer_music block="Buzzer Music %notes"
+    //% group="Car" weight=93
+    export function buzzMusic(notes: string): void {
+        serial.writeLine("M17 " + notes + " ")
+    }
+
+    //% blockId=minilfr_buzzer_localmusic block="Buzzer Music %idx"
+    //% group="Car" weight=92
+    export function buzzBuildMusic(idx: LFRMelodies): void {
+        serial.writeLine("M23 " + idx)
     }
 
     //% blockId=minilfr_motor block="Motor Speed Left|%left Right|%right"
-    //% weight=79
+    //% group="Car" weight=91
     //% right.min=-255 right.max=255
     //% left.min=-255 left.max=255
     //% name.fieldEditor="gridpicker" name.fieldOptions.columns=4
@@ -206,7 +250,7 @@ namespace minilfr {
     }
 
     //% blockId=minilfr_motor_delay block="Motor Speed Left|%left Right|%right Delay|%ms ms"
-    //% weight=78
+    //% group="Car" weight=90
     //% right.min=-255 right.max=255
     //% left.min=-255 left.max=255
     //% name.fieldEditor="gridpicker" name.fieldOptions.columns=4
@@ -216,43 +260,89 @@ namespace minilfr {
     }
 
     //% blockId=minilfr_motor_stop block="Motor Stop"
-    //% weight=77
+    //% group="Car" weight=89
     export function motorStop(): void {
         serial.writeLine("M200 0 0")
     }
 
-    //% blockId=minilfr_buzzer block="Buzzer Freq|%freq HZ Duration|%ms ms"
-    //% weight=69
-    export function buzz(freq: number, ms: number): void {
-        serial.writeLine("M18 " + freq + " " + ms)
-    }
-
-    /**
-     * Buzzer music
-     * @param notes Music notes; eg: g5:1 d c g4:2 b:1 c5:3 
-    */
-    //% blockId=minilfr_buzzer_music block="Buzzer Music %notes"
-    //% weight=68
-    export function buzzMusic(notes: string): void {
-        serial.writeLine("M17 " + notes)
-    }
-
-    //% blockId=minilfr_buzzer_localmusic block="Buzzer Music %idx"
-    //% weight=68
-    export function buzzBuildMusic(idx: LFRMelodies): void {
-        serial.writeLine("M23 " + idx)
+    //% blockId=minilfr_goObjavoid block="Go object avoid mode"
+    //% group="Ultrasonic" weight=80
+    export function goObjavoid(): void {
+        serial.writeLine("M32")
     }
 
     //% blockId=minilfr_ultrasonic block="Ultrasonic"
-    //% weight=65
+    //% group="Ultrasonic" weight=79
     //% promise
     export function Ultrasonic(): number {
         serial.writeLine("M7")
         return sonarValue;
     }
 
+    //% blockId=minilfr_ult_rgb block="Ultrasonic RGB %idx|red %r green %g blue %b"
+    //% group="Ultrasonic" weight=77
+    //% r.min=0 r.max=255
+    //% g.min=0 g.max=255
+    //% b.min=0 b.max=255
+    export function UltrasonicRgb(idx: RGBIDX, r: number, g: number, b: number): void {
+        serial.writeLine("M16 " + idx + " " + r + " " + g + " " + b)
+    }
+
+    //% blockId=minilfr_ult_rgb_static block="Ultrasonic RGB %idx Color %color"
+    //% group="Ultrasonic" weight=78
+    export function UltrasonicRgbStatic(idx: RGBIDX, color: NeoPixelColors): void {
+        let red = (color >> 16) & 0xff;
+        let green = (color >> 8) & 0xff;
+        let blue = (color) & 0xff;
+        serial.writeLine("M16 " + idx + " " + red + " " + green + " " + blue)
+    }
+
+    //% blockId=minilfr_ring block="Ring RGB %idx|red %r green %g blue %b"
+    //% group="RGB Ring" weight=59
+    //% idx.min=1 idx.max=15
+    //% r.min=0 r.max=255
+    //% g.min=0 g.max=255
+    //% b.min=0 b.max=255
+    export function RingRgb(idx: number, r: number, g: number, b: number): void {
+        serial.writeLine("M22 " + idx + " " + r + " " + g + " " + b)
+    }
+
+    //% blockId=minilfr_ring_static block="Ring RGB %idx Color %color"
+    //% group="RGB Ring" weight=60
+    //% idx.min=1 idx.max=15
+    export function RingRgbStatic(idx: number, color: NeoPixelColors): void {
+        let red = (color >> 16) & 0xff;
+        let green = (color >> 8) & 0xff;
+        let blue = (color) & 0xff;
+        serial.writeLine("M22 " + idx + " " + red + " " + green + " " + blue)
+    }
+
+    //% blockId=minilfr_ring_all block="Ring RGB All red %r green %g blue %b"
+    //% group="RGB Ring" weight=57
+    //% r.min=0 r.max=255
+    //% g.min=0 g.max=255
+    //% b.min=0 b.max=255
+    export function RingAll(r: number, g: number, b: number): void {
+        serial.writeLine("M22 " + 0 + " " + r + " " + g + " " + b)
+    }
+
+    //% blockId=minilfr_ring_all_static block="Ring RGB All Color %color"
+    //% group="RGB Ring" weight=58
+    export function RingAllRgbStatic(color: NeoPixelColors): void {
+        let red = (color >> 16) & 0xff;
+        let green = (color >> 8) & 0xff;
+        let blue = (color) & 0xff;
+        serial.writeLine("M22 " + 0 + " " + red + " " + green + " " + blue)
+    }
+
+    //% blockId=minilfr_golinefollow block="Go linefollow mode"
+    //% group="Linefollower" weight=50
+    export function goLinefollow(): void {
+        serial.writeLine("M31")
+    }
+
     //% blockId=minilfr_sensor block="Sensor %sensor Value"
-    //% weight=64
+    //% group="Linefollower" weight=49
     export function SensorRead(sensor: SensorEnum): number {
         if (input.runningTimeMicros() - lastSensorUpdate > 10) {
             serial.writeLine("M10 " + sensor)
@@ -261,45 +351,27 @@ namespace minilfr {
         return sensorValue[sensor];
     }
 
-    //% blockId=minilfr_battery block="Battery Voltage"
-    //% weight=63
-    export function BatteryVoltage(): number {
-        serial.writeLine("M8")
-        return batteryValue;
+    //% blockId=minilfr_matrix_str block="matrix scroll %mstr"
+    //% group="Matrix" weight=40
+    export function matrixScrollStr(mstr: string): void {
+        serial.writeLine("M20 " + mstr)
     }
 
+
     //% blockId=minilfr_infra_send block="Infra Send %data"
-    //% weight=61
+    //% group="Infrared" weight=30
     export function infraSend(data: string): void {
         serial.writeLine("M12 " + data)
     }
 
     //% blockId=minilfr_onirrx block="on Infra Got"
-    //% weight=60
+    //% group="Infrared" weight=29
     export function onInfraGot(handler: (irdata: string) => void): void {
         irHandler = handler;
     }
 
-    //% blockId=minilfr_golinefollow block="Go linefollow mode"
-    //% weight=59
-    export function goLinefollow(): void {
-        serial.writeLine("M31")
-    }
-
-    //% blockId=minilfr_goObjavoid block="Go object avoid mode"
-    //% weight=58
-    export function goObjavoid(): void {
-        serial.writeLine("M32")
-    }
-
-    //% blockId=minilfr_goIdle block="Go Idle"
-    //% weight=57
-    export function goIdle(): void {
-        serial.writeLine("M33")
-    }
-
     //% blockId=minilfr_sensorcali block="Sensor Calibrate"
-    //% weight=49
+    //% weight=50
     //% advanced=true
     export function calibrateSensor(): void {
         serial.writeLine("M310")
@@ -321,10 +393,18 @@ namespace minilfr {
     }
 
     //% blockId=minilfr_setsensordbg block="Set Sensordebug %dgb"
-    //% weight=47
+    //% weight=49
     //% advanced=true
     export function setSensorDebug(dgb: boolean): void {
         debugSensor = dgb
+    }
+
+    //% blockId=minilfr_battery block="Battery Voltage"
+    //% weight=51
+    //% advanced=true
+    export function BatteryVoltage(): number {
+        serial.writeLine("M8")
+        return batteryValue;
     }
 
 }
