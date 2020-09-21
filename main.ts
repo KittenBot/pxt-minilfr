@@ -4,7 +4,6 @@ Microbit extension for kittenbot MiniLFR
 load dependency
 "minilfr": "file:../pxt-minilfr"
 */
-
 //% color="#91a7ff" weight=10 icon="\uf061"
 //% groups='["Car", "Linefollower", "Ultrasonic", "RGB Ring", "Matrix", "Infrared"]'
 namespace minilfr {
@@ -95,7 +94,7 @@ namespace minilfr {
         //% block=white
         White = 0xFFFFFF,
         //% block=black
-        Black = 0x000000       
+        Black = 0x000000
     }
 
     export enum RGBIDX {
@@ -184,13 +183,19 @@ namespace minilfr {
     //% blockId=minilfr_goIdle block="Go Idle"
     //% weight=99
     export function goIdle(): void {
-        serial.writeLine("M33")
+        serial.writeLine(`M33`);
+        basic.pause(10);
+        serial.writeLine(`M33`);
     }
 
     //% blockId=minilfr_spotlight block="Spotlight Left|%left Right|%right"
     //% group="Car" weight=98
     export function spotLight(left: ONOFF, right: ONOFF): void {
-        serial.writeLine("M6 " + left + " " + right)
+        // serial.writeLine("M6 " + left + " " + right)
+        let str = `M6 ${left} ${right}`;
+        serial.writeLine(str);
+        basic.pause(10);
+        serial.writeLine(str);
     }
 
     //% blockId=minilfr_rgb_brightness block="RGB brightness %brightness"
@@ -206,7 +211,11 @@ namespace minilfr {
         let red = (color >> 16) & 0xff;
         let green = (color >> 8) & 0xff;
         let blue = (color) & 0xff;
-        serial.writeLine("M13 " + idx + " " + red + " " + green + " " + blue)
+        // serial.writeLine("M13 " + idx + " " + red + " " + green + " " + blue)
+        let str = `M13 ${idx} ${red} ${green} ${blue}`;
+        serial.writeLine(str);
+        basic.pause(10);
+        serial.writeLine(str);
     }
 
     //% blockId=minilfr_hover_rgb block="Hover RGB %idx|red %r green %g blue %b"
@@ -215,54 +224,76 @@ namespace minilfr {
     //% g.min=0 g.max=255
     //% b.min=0 b.max=255
     export function hoverRgb(idx: RGBIDX, r: number, g: number, b: number): void {
-        serial.writeLine("M13 " + idx + " " + r + " " + g + " " + b)
+        // serial.writeLine("M13 " + idx + " " + r + " " + g + " " + b)
+        let str = `M13 ${idx} ${r} ${g} ${b}`;
+        serial.writeLine(str);
+        basic.pause(10);
+        serial.writeLine(str);
     }
 
     //% blockId=minilfr_buzzer block="Buzzer Freq|%freq HZ Duration|%ms ms"
     //% group="Car" weight=94
     export function buzz(freq: number, ms: number): void {
-        serial.writeLine("M18 " + freq + " " + ms)
+        // serial.writeLine("M18 " + freq + " " + ms)
+        let str = `M18 ${freq} ${ms}`;
+        serial.writeLine(str);
     }
 
     /**
      * Buzzer music
-     * @param notes Music notes; eg: g5:1
+     * @param music Music music; eg: c4:4
     */
-    //% blockId=minilfr_buzzer_music block="Buzzer Music %notes"
+    //% blockId=minilfr_buzzer_music block="Buzzer Music %music"
     //% group="Car" weight=93
-    export function buzzMusic(notes: string): void {
-        serial.writeLine("M17 " + notes + " ")
+    export function buzzMusic(music: string): void {
+        // serial.writeLine("M17 " + music + " ")
+        let str = `M17 ${music} `;
+        // serial.writeLine(str);
+        serial.writeString(str);
+        serial.writeString(`\r\n`);
     }
 
     //% blockId=minilfr_buzzer_localmusic block="Buzzer Music %idx"
     //% group="Car" weight=92
     export function buzzBuildMusic(idx: LFRMelodies): void {
-        serial.writeLine("M23 " + idx)
+        // serial.writeLine("M23 " + idx)
+        let str = `M23 ${idx}`;
+        serial.writeLine(str);
     }
 
     //% blockId=minilfr_motor block="Motor Speed Left|%left Right|%right"
     //% group="Car" weight=91
     //% right.min=-255 right.max=255
     //% left.min=-255 left.max=255
-    //% name.fieldEditor="gridpicker" name.fieldOptions.columns=4
     export function motorSpeed(left: number, right: number): void {
-        serial.writeLine("M200 " + left + " " + right)
+        // serial.writeLine("M200 " + left + " " + right)
+        
+        let str = `M200 ${left} ${right}`;
+        serial.writeLine(str);
     }
 
     //% blockId=minilfr_motor_delay block="Motor Speed Left|%left Right|%right Delay|%ms ms"
     //% group="Car" weight=90
     //% right.min=-255 right.max=255
     //% left.min=-255 left.max=255
-    //% name.fieldEditor="gridpicker" name.fieldOptions.columns=4
     export function motorSpeedDelay(left: number, right: number, ms: number): void {
-        serial.writeLine("M202 " + left + " " + right + " " + ms)
+        // serial.writeLine("M202 " + left + " " + right + " " + ms)
+        // basic.pause(ms);
+        motorStop();
+        basic.pause(10);
+        let str = `M202 ${left} ${right} ${ms}`;
+        serial.writeLine(str);
         basic.pause(ms);
     }
 
     //% blockId=minilfr_motor_stop block="Motor Stop"
     //% group="Car" weight=89
     export function motorStop(): void {
-        serial.writeLine("M200 0 0")
+        // serial.writeLine("M200 0 0")
+        let str = `M200 0 0`;
+        serial.writeLine(str);
+        basic.pause(10);
+        serial.writeLine(str);
     }
 
     //% blockId=minilfr_goObjavoid block="Go object avoid mode"
@@ -285,7 +316,11 @@ namespace minilfr {
     //% g.min=0 g.max=255
     //% b.min=0 b.max=255
     export function UltrasonicRgb(idx: RGBIDX, r: number, g: number, b: number): void {
-        serial.writeLine("M16 " + idx + " " + r + " " + g + " " + b)
+        // serial.writeLine("M16 " + idx + " " + r + " " + g + " " + b)
+        let str = `M16 ${idx} ${r} ${g} ${b}`;
+        serial.writeLine(str);
+        basic.pause(10);
+        serial.writeLine(str);
     }
 
     //% blockId=minilfr_ult_rgb_static block="Ultrasonic RGB %idx Color %color"
@@ -304,7 +339,12 @@ namespace minilfr {
     //% g.min=0 g.max=255
     //% b.min=0 b.max=255
     export function RingRgb(idx: number, r: number, g: number, b: number): void {
-        serial.writeLine("M22 " + idx + " " + r + " " + g + " " + b)
+        // serial.writeLine("M22 " + idx + " " + r + " " + g + " " + b)
+        let str = `M22 ${idx} ${r} ${g} ${b}`;
+        serial.writeLine(str);
+        basic.pause(10);
+        serial.writeLine(str);
+        
     }
 
     //% blockId=minilfr_ring_static block="Ring RGB %idx Color %color"
@@ -314,7 +354,11 @@ namespace minilfr {
         let red = (color >> 16) & 0xff;
         let green = (color >> 8) & 0xff;
         let blue = (color) & 0xff;
-        serial.writeLine("M22 " + idx + " " + red + " " + green + " " + blue)
+        // serial.writeLine("M22 " + idx + " " + red + " " + green + " " + blue)
+        let str = `M22 ${idx} ${red} ${green} ${blue}`;
+        serial.writeLine(str);
+        basic.pause(10);
+        serial.writeLine(str);
     }
 
     //% blockId=minilfr_ring_all block="Ring RGB All red %r green %g blue %b"
@@ -323,7 +367,11 @@ namespace minilfr {
     //% g.min=0 g.max=255
     //% b.min=0 b.max=255
     export function RingAll(r: number, g: number, b: number): void {
-        serial.writeLine("M22 " + 0 + " " + r + " " + g + " " + b)
+        // serial.writeLine("M22 " + 0 + " " + r + " " + g + " " + b)
+        let str = `M22 0 ${r} ${g} ${b}`;
+        serial.writeLine(str);
+        basic.pause(10);
+        serial.writeLine(str);
     }
 
     //% blockId=minilfr_ring_all_static block="Ring RGB All Color %color"
@@ -332,7 +380,11 @@ namespace minilfr {
         let red = (color >> 16) & 0xff;
         let green = (color >> 8) & 0xff;
         let blue = (color) & 0xff;
-        serial.writeLine("M22 " + 0 + " " + red + " " + green + " " + blue)
+        // serial.writeLine("M22 " + 0 + " " + red + " " + green + " " + blue)
+        let str = `M22 0 ${red} ${green} ${blue}`;
+        serial.writeLine(str);
+        basic.pause(10);
+        serial.writeLine(str);
     }
 
     //% blockId=minilfr_golinefollow block="Go linefollow mode"
