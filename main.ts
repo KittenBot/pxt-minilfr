@@ -20,15 +20,15 @@ namespace minilfr {
 
     export enum SensorEnum {
         //% block=T1
-        A = 1,
+        A = 0,
         //% block=T2
-        B = 2,
+        B = 1,
         //% block=T3
-        C = 3,
+        C = 2,
         //% block=T4
-        D = 4,
+        D = 3,
         //% block=T5
-        E = 5
+        E = 4
     }
 
     export enum LFRMelodies {
@@ -404,10 +404,13 @@ namespace minilfr {
     //% blockId=minilfr_sensor block="Sensor %sensor Value"
     //% group="Linefollower" weight=49
     export function SensorRead(sensor: SensorEnum): number {
-        if (input.runningTimeMicros() - lastSensorUpdate > 10) {
-            serial.writeLine("M10 " + sensor)
-            lastSensorUpdate = input.runningTimeMicros()
-        }
+        let str = `M10 ${sensor}`
+        asyncWrite(str, 10)
+        // if (input.runningTimeMicros() - lastSensorUpdate > 10) {
+        //     // serial.writeLine("M10 " + sensor)
+
+        //     lastSensorUpdate = input.runningTimeMicros()
+        // }
         return sensorValue[sensor];
     }
 
