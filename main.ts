@@ -148,7 +148,8 @@ namespace minilfr {
     serial.onDataReceived('\n', function () {
         let s = trim(serial.readString())
         let tmp = s.split(" ")
-
+        let c = parseInt(tmp[0].substr(1))
+        control.raiseEvent(EventBusSource.MES_BROADCAST_GENERAL_ID, 0x8900+c)
         if (tmp[0].includes("TRIG")) {
             if (tmp[1].includes("infra") && irHandler) {
                 irHandler(tmp[2])
@@ -170,6 +171,11 @@ namespace minilfr {
         }
 
     })
+
+    function asyncWrite(msg: string, evt: number): void {
+        serial.writeLine(msg)
+        control.waitForEvent(EventBusSource.MES_BROADCAST_GENERAL_ID, 0x8900 + evt)
+      }
 
     //% blockId=minilfr_init block="MiniLFR init"
     //% group="Car" weight=100
@@ -306,7 +312,9 @@ namespace minilfr {
     //% group="Ultrasonic" weight=79
     //% promise
     export function Ultrasonic(): number {
-        serial.writeLine("M7")
+        // serial.writeLine("M7")
+        let str = `M7`
+        asyncWrite(str, 7)
         return sonarValue;
     }
 
