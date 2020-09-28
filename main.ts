@@ -200,8 +200,7 @@ namespace minilfr {
         // serial.writeLine("M6 " + left + " " + right)
         let str = `M6 ${left} ${right}`;
         serial.writeLine(str);
-        basic.pause(10);
-        serial.writeLine(str);
+        basic.pause(30);
     }
 
     //% blockId=minilfr_rgb_brightness block="RGB brightness %brightness"
@@ -220,8 +219,7 @@ namespace minilfr {
         // serial.writeLine("M13 " + idx + " " + red + " " + green + " " + blue)
         let str = `M13 ${idx} ${red} ${green} ${blue}`;
         serial.writeLine(str);
-        basic.pause(10);
-        serial.writeLine(str);
+        basic.pause(30);
     }
 
     //% blockId=minilfr_hover_rgb block="Hover RGB %idx|red %r green %g blue %b"
@@ -233,8 +231,7 @@ namespace minilfr {
         // serial.writeLine("M13 " + idx + " " + r + " " + g + " " + b)
         let str = `M13 ${idx} ${r} ${g} ${b}`;
         serial.writeLine(str);
-        basic.pause(10);
-        serial.writeLine(str);
+        basic.pause(30);
     }
 
     //% blockId=minilfr_buzzer block="Buzzer Freq|%freq HZ Duration|%ms ms"
@@ -327,8 +324,7 @@ namespace minilfr {
         // serial.writeLine("M16 " + idx + " " + r + " " + g + " " + b)
         let str = `M16 ${idx} ${r} ${g} ${b}`;
         serial.writeLine(str);
-        basic.pause(10);
-        serial.writeLine(str);
+        basic.pause(30);
     }
 
     //% blockId=minilfr_ult_rgb_static block="Ultrasonic RGB %idx Color %color"
@@ -338,8 +334,13 @@ namespace minilfr {
         let green = (color >> 8) & 0xff;
         let blue = (color) & 0xff;
         serial.writeLine("M16 " + idx + " " + red + " " + green + " " + blue)
+        basic.pause(30);
     }
 
+    /**
+     * rgb idex
+     * @param idx rgb index; eg: 1
+    */
     //% blockId=minilfr_ring block="Ring RGB %idx|red %r green %g blue %b"
     //% group="RGB Ring" weight=59
     //% idx.min=1 idx.max=15
@@ -350,11 +351,14 @@ namespace minilfr {
         // serial.writeLine("M22 " + idx + " " + r + " " + g + " " + b)
         let str = `M22 ${idx} ${r} ${g} ${b}`;
         serial.writeLine(str);
-        basic.pause(10);
-        serial.writeLine(str);
-        
+        basic.pause(30);
+        // serial.writeLine(str);     
     }
 
+    /**
+     * rgb idex
+     * @param idx rgb index; eg: 1
+    */
     //% blockId=minilfr_ring_static block="Ring RGB %idx Color %color"
     //% group="RGB Ring" weight=60
     //% idx.min=1 idx.max=15
@@ -365,8 +369,8 @@ namespace minilfr {
         // serial.writeLine("M22 " + idx + " " + red + " " + green + " " + blue)
         let str = `M22 ${idx} ${red} ${green} ${blue}`;
         serial.writeLine(str);
-        basic.pause(10);
-        serial.writeLine(str);
+        basic.pause(30);
+        // serial.writeLine(str);
     }
 
     //% blockId=minilfr_ring_all block="Ring RGB All red %r green %g blue %b"
@@ -378,8 +382,8 @@ namespace minilfr {
         // serial.writeLine("M22 " + 0 + " " + r + " " + g + " " + b)
         let str = `M22 0 ${r} ${g} ${b}`;
         serial.writeLine(str);
-        basic.pause(10);
-        serial.writeLine(str);
+        basic.pause(30);
+        // serial.writeLine(str);
     }
 
     //% blockId=minilfr_ring_all_static block="Ring RGB All Color %color"
@@ -391,13 +395,14 @@ namespace minilfr {
         // serial.writeLine("M22 " + 0 + " " + red + " " + green + " " + blue)
         let str = `M22 0 ${red} ${green} ${blue}`;
         serial.writeLine(str);
-        basic.pause(10);
-        serial.writeLine(str);
+        basic.pause(30);
     }
 
     //% blockId=minilfr_golinefollow block="Go linefollow mode"
     //% group="Linefollower" weight=50
     export function goLinefollow(): void {
+        serial.writeLine("M31")
+        basic.pause(10);
         serial.writeLine("M31")
     }
 
@@ -418,6 +423,7 @@ namespace minilfr {
     //% group="Matrix" weight=40
     export function matrixScrollStr(mstr: string): void {
         serial.writeLine("M20 " + mstr)
+        basic.pause(30);
     }
 
 
