@@ -184,6 +184,7 @@ namespace minilfr {
         serial.writeString("\n\n")
         serial.setRxBufferSize(64)
         lastSensorUpdate = input.runningTimeMicros()
+        basic.pause(300);
     }
 
     //% blockId=minilfr_goIdle block="Go Idle"
@@ -322,7 +323,7 @@ namespace minilfr {
     //% b.min=0 b.max=255
     export function UltrasonicRgb(idx: RGBIDX, r: number, g: number, b: number): void {
         // serial.writeLine("M16 " + idx + " " + r + " " + g + " " + b)
-        let str = `M16 ${idx} ${r} ${g} ${b}`;
+        let str = `M16 ${idx} ${r} ${g} ${b} `;
         serial.writeLine(str);
         basic.pause(30);
     }
@@ -349,9 +350,9 @@ namespace minilfr {
     //% b.min=0 b.max=255
     export function RingRgb(idx: number, r: number, g: number, b: number): void {
         // serial.writeLine("M22 " + idx + " " + r + " " + g + " " + b)
-        let str = `M22 ${idx} ${r} ${g} ${b}`;
+        let str = `M22 ${idx} ${r} ${g} ${b} `;
         serial.writeLine(str);
-        basic.pause(30);
+        control.waitMicros(1000*80)
         // serial.writeLine(str);     
     }
 
@@ -367,9 +368,9 @@ namespace minilfr {
         let green = (color >> 8) & 0xff;
         let blue = (color) & 0xff;
         // serial.writeLine("M22 " + idx + " " + red + " " + green + " " + blue)
-        let str = `M22 ${idx} ${red} ${green} ${blue}`;
+        let str = `M22 ${idx} ${red} ${green} ${blue} `;
         serial.writeLine(str);
-        basic.pause(30);
+        control.waitMicros(1000*80)
         // serial.writeLine(str);
     }
 
@@ -380,9 +381,9 @@ namespace minilfr {
     //% b.min=0 b.max=255
     export function RingAll(r: number, g: number, b: number): void {
         // serial.writeLine("M22 " + 0 + " " + r + " " + g + " " + b)
-        let str = `M22 0 ${r} ${g} ${b}`;
+        let str = `M22 0 ${r} ${g} ${b} `;
         serial.writeLine(str);
-        basic.pause(30);
+        control.waitMicros(1000*80)
         // serial.writeLine(str);
     }
 
@@ -393,9 +394,9 @@ namespace minilfr {
         let green = (color >> 8) & 0xff;
         let blue = (color) & 0xff;
         // serial.writeLine("M22 " + 0 + " " + red + " " + green + " " + blue)
-        let str = `M22 0 ${red} ${green} ${blue}`;
+        let str = `M22 0 ${red} ${green} ${blue} `;
         serial.writeLine(str);
-        basic.pause(30);
+        control.waitMicros(1000*80)
     }
 
     //% blockId=minilfr_golinefollow block="Go linefollow mode"
