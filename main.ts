@@ -403,8 +403,6 @@ namespace minilfr {
     //% group="Linefollower" weight=50
     export function goLinefollow(): void {
         serial.writeLine("M31")
-        basic.pause(10);
-        serial.writeLine("M31")
     }
 
     //% blockId=minilfr_sensor block="Sensor %sensor Value"
