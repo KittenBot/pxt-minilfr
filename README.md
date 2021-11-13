@@ -1,25 +1,20 @@
 # MiniLFR
 
-![](minilfr).png)
+![](minilfr.png)
 
 ## Feature
 
 * This extension is designed to programme and drive the miniLFR car for micro:bit, You can [get minilfr From KittenBot](https://item.taobao.com/item.htm?spm=a1z10.3-c-s.w4002-21482550023.41.72385d5fjjtkhP&id=553539619464)
 
-1. 一体化无需组装，mcu为mega328的小车，可连接microbit使用makecode完成编程控制
-This robot car with the mega 328 MCU is already assembled; it can be connected to the Micro:bit and programmed with MakeCode.
+1. This robot car with the mega 328 MCU is already assembled; it can be connected to the Micro:bit and programmed with MakeCode.
 
-2. 车头部位含有4PIN的IO接口，通过接插不同的电子模块可实现如超声波避障、ws2812灯环控制、电子矩阵屏显示的玩法
-There is a 4-pin IO port in the front of the car. By plugging different electronic modules, you can add functions like ultrasonic obstacle avoidance, ws2812 LED control and LED matrix display.
+2. There is a 4-pin IO port in the front of the car. By plugging different electronic modules, you can add functions like ultrasonic obstacle avoidance, ws2812 LED control and LED matrix display.
 
-3. 车体小巧且扁平，适合作为各种年龄段的编程学习入门
-The car is small and flat, which is suitable for all ages to start to learn programming as beginners.
+3. The car is small and flat, which is suitable for all ages to start to learn programming as beginners.
 
-4. 板载18650可充电锂电池，使用usb接上小车可直接充电
-The built-in rechargeable 18650 lithium battery allows you to charge the car with the USB cable.
+4. The built-in rechargeable 18650 lithium battery allows you to charge the car with the USB cable.
 
-5. 小车具有特殊固件，能够实现一键PID算法巡线，一键避障功能，适合作为初次上手的功能展示
-There is a special firmware on the car that features functions like PID line following and obstacle avoidance, which is suitable for beginners to finish and showcase their project easily.
+5. There is a special firmware on the car that features functions like PID line following and obstacle avoidance, which is suitable for beginners to finish and showcase their project easily.
 
 
 ## Basic usage
