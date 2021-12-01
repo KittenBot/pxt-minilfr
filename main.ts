@@ -399,14 +399,20 @@ namespace minilfr {
         control.waitMicros(1000*80)
     }
 
-    //% blockId=minilfr_golinefollow block="Go linefollow mode"
+    //% blockId=minilfr_sensorcali block="Sensor Calibrate"
     //% group="Linefollower" weight=50
+    export function calibrateSensor(): void {
+        serial.writeLine("M310")
+    }
+
+    //% blockId=minilfr_golinefollow block="Go linefollow mode"
+    //% group="Linefollower" weight=49
     export function goLinefollow(): void {
         serial.writeLine("M31")
     }
 
     //% blockId=minilfr_sensor block="Sensor %sensor Value"
-    //% group="Linefollower" weight=49
+    //% group="Linefollower" weight=48
     export function SensorRead(sensor: SensorEnum): number {
         let str = `M10 ${sensor}`
         asyncWrite(str, 10)
@@ -417,13 +423,20 @@ namespace minilfr {
         // }
         return sensorValue[sensor];
     }
-
-    //% blockId=minilfr_matrix_str block="matrix scroll %mstr"
-    //% group="Matrix" weight=40
-    export function matrixScrollStr(mstr: string): void {
-        serial.writeLine("M20 " + mstr)
-        basic.pause(30);
+    
+    //% blockId=minilfr_setsensordbg block="Set Sensordebug %dgb"
+    //% group="Linefollower" weight=47
+    export function setSensorDebug(dgb: boolean): void {
+        debugSensor = dgb
     }
+
+
+    // //% blockId=minilfr_matrix_str block="matrix scroll %mstr"
+    // //% group="Matrix" weight=40
+    // export function matrixScrollStr(mstr: string): void {
+    //     serial.writeLine("M20 " + mstr)
+    //     basic.pause(30);
+    // }
 
 
     //% blockId=minilfr_infra_send block="Infra Send %data"
@@ -436,13 +449,6 @@ namespace minilfr {
     //% group="Infrared" weight=29
     export function onInfraGot(handler: (irdata: string) => void): void {
         irHandler = handler;
-    }
-
-    //% blockId=minilfr_sensorcali block="Sensor Calibrate"
-    //% weight=50
-    //% advanced=true
-    export function calibrateSensor(): void {
-        serial.writeLine("M310")
     }
 
     //% blockId=minilfr_getmotodiff block="Get MotorDiff"
@@ -458,13 +464,6 @@ namespace minilfr {
     //% advanced=true
     export function setMotorDiff(diff: number): void {
         serial.writeLine("M209 " + diff)
-    }
-
-    //% blockId=minilfr_setsensordbg block="Set Sensordebug %dgb"
-    //% weight=49
-    //% advanced=true
-    export function setSensorDebug(dgb: boolean): void {
-        debugSensor = dgb
     }
 
     //% blockId=minilfr_battery block="Battery Voltage"

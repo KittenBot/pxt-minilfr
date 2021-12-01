@@ -21,7 +21,7 @@
     "minilfr.RingAllRgbStatic|block": "8字RGB灯环 颜色 %color",
     "minilfr.goLinefollow|block": "进入巡线模式",
     "minilfr.SensorRead|block": "五路巡线传感器 %sensor 数值",
-    "minilfr.matrixScrollStr|block": "点阵屏滚动显示 %mstr",
+    // "minilfr.matrixScrollStr|block": "点阵屏滚动显示 %mstr",
     "minilfr.infraSend|block": "红外发送 %data",
     "minilfr.onInfraGot|block": "当红外接收",
     "minilfr.BatteryVoltage|block": "小车电池电压",
