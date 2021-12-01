@@ -430,15 +430,6 @@ namespace minilfr {
         debugSensor = dgb
     }
 
-
-    // //% blockId=minilfr_matrix_str block="matrix scroll %mstr"
-    // //% group="Matrix" weight=40
-    // export function matrixScrollStr(mstr: string): void {
-    //     serial.writeLine("M20 " + mstr)
-    //     basic.pause(30);
-    // }
-
-
     //% blockId=minilfr_infra_send block="Infra Send %data"
     //% group="Infrared" weight=30
     export function infraSend(data: string): void {
