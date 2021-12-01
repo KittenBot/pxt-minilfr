@@ -14,6 +14,7 @@ namespace minilfr {
     let sensorValue: number[] = [0, 0, 0, 0, 0];
     let lastSensorUpdate: number;
     let irHandler: EvtStr = null;
+    let asyncFlag: boolean = false;
 
     let debugSensor: boolean;
 
@@ -274,6 +275,8 @@ namespace minilfr {
         
         let str = `M200 ${left} ${right}`;
         serial.writeLine(str);
+        basic.pause(15);
+        
     }
 
     //% blockId=minilfr_motor_delay block="Motor Speed Left|%left Right|%right Delay|%ms ms"
@@ -283,8 +286,8 @@ namespace minilfr {
     export function motorSpeedDelay(left: number, right: number, ms: number): void {
         // serial.writeLine("M202 " + left + " " + right + " " + ms)
         // basic.pause(ms);
-        motorStop();
-        basic.pause(10);
+        // motorStop();
+        // basic.pause(10);
         let str = `M202 ${left} ${right} ${ms}`;
         serial.writeLine(str);
         basic.pause(ms);
@@ -296,8 +299,7 @@ namespace minilfr {
         // serial.writeLine("M200 0 0")
         let str = `M200 0 0`;
         serial.writeLine(str);
-        basic.pause(10);
-        serial.writeLine(str);
+        basic.pause(15);
     }
 
     //% blockId=minilfr_goObjavoid block="Go object avoid mode"
@@ -312,7 +314,9 @@ namespace minilfr {
     export function Ultrasonic(): number {
         // serial.writeLine("M7")
         let str = `M7`
-        asyncWrite(str, 7)
+        // asyncWrite(str, 7)
+        serial.writeLine(str);
+        basic.pause(15);
         return sonarValue;
     }
 
