@@ -411,21 +411,22 @@ namespace minilfr {
         serial.writeLine("M31")
     }
 
-    //% blockId=minilfr_sensor block="Sensor %sensor Value"
+    //% blockId=minilfr_getsensor block="Get sensor %sensor Value"
     //% group="Linefollower" weight=48
-    export function SensorRead(sensor: SensorEnum): number {
-        let str = `M10 ${sensor}`
+    export function GetSensor(): void {
+        let str = `M10`
         asyncWrite(str, 10)
-        // if (input.runningTimeMicros() - lastSensorUpdate > 10) {
-        //     // serial.writeLine("M10 " + sensor)
+    }
 
-        //     lastSensorUpdate = input.runningTimeMicros()
-        // }
+    //% blockId=minilfr_sensorread block="Sensor %sensor Value"
+    //% group="Linefollower" weight=47
+    export function SensorRead(sensor: SensorEnum): number {
         return sensorValue[sensor];
     }
+        
     
     //% blockId=minilfr_setsensordbg block="Set Sensordebug %dgb"
-    //% group="Linefollower" weight=47
+    //% group="Linefollower" weight=46
     export function setSensorDebug(dgb: boolean): void {
         debugSensor = dgb
     }

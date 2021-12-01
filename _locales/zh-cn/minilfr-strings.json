@@ -20,6 +20,7 @@
     "minilfr.RingAll|block": "8字RGB灯环 红 %r 绿 %g 蓝 %b",
     "minilfr.RingAllRgbStatic|block": "8字RGB灯环 颜色 %color",
     "minilfr.goLinefollow|block": "进入巡线模式",
+    "minilfr.GetSensor|block": "读取五路巡线传感器数值",
     "minilfr.SensorRead|block": "五路巡线传感器 %sensor 数值",
     "minilfr.infraSend|block": "红外发送 %data",
     "minilfr.onInfraGot|block": "当红外接收",
